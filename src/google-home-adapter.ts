@@ -8,15 +8,20 @@ import { Adapter, Device, } from 'gateway-addon';
 
 import { Scanner } from 'google-home-notify-client';
 
+interface Message {
+  name: string,
+  message: string
+}
+
 class GoogleHomeDevice extends Device {
-  private messageByName: { [name: string]: number } = {};
+  private messageByName: { [name: string]: string } = {};
 
   constructor(adapter: any, manifest: any, private device: any) {
     super(adapter, `google-home-${device.ip}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
     this.name = `${manifest.display_name} (${device.ip})`;
     this.description = manifest.description;
-    const config = manifest.moziot.config;
+    const messages: Message[] = manifest.moziot.config.messages;
 
     const speakInput = {
       type: 'object',
@@ -29,8 +34,8 @@ class GoogleHomeDevice extends Device {
 
     this.addSpeakAction('speak', speakInput);
 
-    if (config.messages) {
-      for (const message of config.messages) {
+    if (messages) {
+      for (const message of messages) {
         this.messageByName[message.name] = message.message;
         console.log(`Creating action for ${message.name}`);
         this.addSpeakAction(message.name);
