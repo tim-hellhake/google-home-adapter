@@ -6,7 +6,6 @@
 
 'use strict';
 
-const GoogleHomeAdapter = require('./google-home-adapter');
+import { GoogleHomeAdapter } from './google-home-adapter';
 
-module.exports =
-    (addonManager, manifest) => new GoogleHomeAdapter(addonManager, manifest);
+export = (addonManager: any, manifest: any) => new GoogleHomeAdapter(addonManager, manifest);

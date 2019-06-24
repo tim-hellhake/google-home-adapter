@@ -1,12 +1,13 @@
 {
   "name": "google-home-adapter",
   "display_name": "Google Home",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Uses your Google Home device to speak to you",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "build": "tsc -p ."
   },
   "repository": {
     "type": "git",
@@ -63,7 +64,7 @@
     "google-home-notify-client": "^0.3.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.2",
-    "eslint": "^6.0.0"
+    "typescript": "^3.5.2",
+    "@types/node": "^12.0.10"
   }
 }

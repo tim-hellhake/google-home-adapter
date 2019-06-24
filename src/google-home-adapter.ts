@@ -4,25 +4,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.*
  */
 
-'use strict';
+import { Adapter, Device, } from 'gateway-addon';
 
-const {
-  Adapter,
-  Device,
-} = require('gateway-addon');
-
-const {
-  Scanner
-} = require('google-home-notify-client');
+import { Scanner } from 'google-home-notify-client';
 
 class GoogleHomeDevice extends Device {
-  constructor(adapter, manifest, device) {
+  private messageByName: { [name: string]: number } = {};
+
+  constructor(adapter: any, manifest: any, private device: any) {
     super(adapter, `google-home-${device.ip}`);
-    this['@context'] = 'https://iot.mozilla.org/schemas/';
-    this.name = `${manifest.display_name} (${device.ip})`;
-    this.description = manifest.description;
-    this.config = manifest.moziot.config;
-    this.device = device;
+    (<any>this)['@context'] = 'https://iot.mozilla.org/schemas/';
+    (<any>this).name = `${manifest.display_name} (${device.ip})`;
+    (<any>this).description = manifest.description;
+    const config = manifest.moziot.config;
 
     const speakInput = {
       type: 'object',
@@ -35,19 +29,17 @@ class GoogleHomeDevice extends Device {
 
     this.addSpeakAction('speak', speakInput);
 
-    this.messages = {};
-
-    if (this.config.messages) {
-      for (const message of this.config.messages) {
-        this.messages[message.name] = message.message;
+    if (config.messages) {
+      for (const message of config.messages) {
+        this.messageByName[message.name] = message.message;
         console.log(`Creating action for ${message.name}`);
         this.addSpeakAction(message.name);
       }
     }
   }
 
-  addSpeakAction(name, input) {
-    const description = {
+  addSpeakAction(name: string, input?: any) {
+    const description: any = {
       title: name,
       description: 'Read some text',
     };
@@ -56,17 +48,17 @@ class GoogleHomeDevice extends Device {
       description.input = input;
     }
 
-    this.addAction(name, description);
+    (<any>this).addAction(name, description);
   }
 
-  async performAction(action) {
+  async performAction(action: any) {
     action.start();
 
     if (action.name === 'speak') {
       console.log(`Speaking ${action.input.text}`);
       this.device.notify(action.input.text);
     } else {
-      const message = this.messages[action.name];
+      const message = this.messageByName[action.name];
 
       if (message) {
         console.log(`Speaking ${message}`);
@@ -80,19 +72,17 @@ class GoogleHomeDevice extends Device {
   }
 }
 
-class GoogleHomeAdapter extends Adapter {
-  constructor(addonManager, manifest) {
+export class GoogleHomeAdapter extends Adapter {
+  constructor(addonManager: any, manifest: any) {
     super(addonManager, GoogleHomeAdapter.name, manifest.name);
     addonManager.addAdapter(this);
 
-    Scanner.scan((device) => {
+    Scanner.scan((device: any) => {
       if (device.name && device.name.indexOf('_googlecast._tcp.local') > -1) {
         console.log(`Detected Google Home at ${device.ip}`);
         const googleHomeDevice = new GoogleHomeDevice(this, manifest, device);
-        this.handleDeviceAdded(googleHomeDevice);
+        (<any>this).handleDeviceAdded(googleHomeDevice);
       }
     });
   }
 }
-
-module.exports = GoogleHomeAdapter;
