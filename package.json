@@ -1,7 +1,7 @@
 {
   "name": "google-home-adapter",
   "display_name": "Google Home",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Uses your Google Home device to speak to you",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

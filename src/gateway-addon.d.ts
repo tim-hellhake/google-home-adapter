@@ -4,4 +4,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-declare module 'gateway-addon';
+declare module 'gateway-addon' {
+    class Device {
+        protected '@context': string;
+        protected name: string;
+        protected description: string;
+
+        constructor(adapter: Adapter, id: string);
+
+        public addAction(name: string, metadata: any): void;
+    }
+
+    class Adapter {
+        constructor(addonManager: any, id: string, packageName: string);
+
+        public handleDeviceAdded(device: Device): void;
+    }
+}

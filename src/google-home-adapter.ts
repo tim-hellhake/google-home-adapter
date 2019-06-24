@@ -13,9 +13,9 @@ class GoogleHomeDevice extends Device {
 
   constructor(adapter: any, manifest: any, private device: any) {
     super(adapter, `google-home-${device.ip}`);
-    (<any>this)['@context'] = 'https://iot.mozilla.org/schemas/';
-    (<any>this).name = `${manifest.display_name} (${device.ip})`;
-    (<any>this).description = manifest.description;
+    this['@context'] = 'https://iot.mozilla.org/schemas/';
+    this.name = `${manifest.display_name} (${device.ip})`;
+    this.description = manifest.description;
     const config = manifest.moziot.config;
 
     const speakInput = {
@@ -48,7 +48,7 @@ class GoogleHomeDevice extends Device {
       description.input = input;
     }
 
-    (<any>this).addAction(name, description);
+    this.addAction(name, description);
   }
 
   async performAction(action: any) {
@@ -81,7 +81,7 @@ export class GoogleHomeAdapter extends Adapter {
       if (device.name && device.name.indexOf('_googlecast._tcp.local') > -1) {
         console.log(`Detected Google Home at ${device.ip}`);
         const googleHomeDevice = new GoogleHomeDevice(this, manifest, device);
-        (<any>this).handleDeviceAdded(googleHomeDevice);
+        this.handleDeviceAdded(googleHomeDevice);
       }
     });
   }
