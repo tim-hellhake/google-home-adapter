@@ -57,7 +57,7 @@
               },
               "language": {
                 "type": "string",
-                "title": "The language of the message"
+                "title": "The language of the message (possible values: https://cloud.google.com/speech-to-text/docs/languages)"
               }
             }
           }
