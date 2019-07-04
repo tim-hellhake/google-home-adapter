@@ -29,6 +29,9 @@ class GoogleHomeDevice extends Device {
       properties: {
         text: {
           type: 'string'
+        },
+        language: {
+          type: 'string'
         }
       }
     };
