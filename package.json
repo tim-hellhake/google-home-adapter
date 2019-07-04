@@ -43,7 +43,8 @@
             "title": "A predefined message",
             "required": [
               "name",
-              "message"
+              "message",
+              "language"
             ],
             "properties": {
               "name": {
@@ -53,6 +54,10 @@
               "message": {
                 "type": "string",
                 "title": "The text of the message"
+              },
+              "language": {
+                "type": "string",
+                "title": "The language of the message"
               }
             }
           }

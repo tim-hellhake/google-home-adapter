@@ -10,11 +10,12 @@ import { Scanner } from 'google-home-notify-client';
 
 interface Message {
   name: string,
-  message: string
+  message: string,
+  language: string
 }
 
 class GoogleHomeDevice extends Device {
-  private messageByName: { [name: string]: string } = {};
+  private messageByName: { [name: string]: Message } = {};
 
   constructor(adapter: any, manifest: any, private device: any) {
     super(adapter, `google-home-${device.ip}`);
@@ -36,7 +37,7 @@ class GoogleHomeDevice extends Device {
 
     if (messages) {
       for (const message of messages) {
-        this.messageByName[message.name] = message.message;
+        this.messageByName[message.name] = message;
         console.log(`Creating action for ${message.name}`);
         this.addSpeakAction(message.name);
       }
@@ -61,13 +62,15 @@ class GoogleHomeDevice extends Device {
 
     if (action.name === 'speak') {
       console.log(`Speaking ${action.input.text}`);
+      this.device.language(action.input.language);
       this.device.notify(action.input.text);
     } else {
       const message = this.messageByName[action.name];
 
       if (message) {
         console.log(`Speaking ${message}`);
-        this.device.notify(message);
+        this.device.language(message.language);
+        this.device.notify(message.message);
       } else {
         console.warn(`Unknown action ${action}`);
       }
