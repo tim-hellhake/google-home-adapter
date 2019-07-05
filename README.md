@@ -9,7 +9,9 @@
 Uses your Google Home device to speak to you.
 
 ## Usage
-The addon registers a google-home device with a `speak(text)` action.
+The addon registers a google-home device with a `speak(text, language)` action.
+
+For a list of possible language values see https://cloud.google.com/speech-to-text/docs/languages.
 
 Currently, a rule can only trigger parameterless actions.
 
