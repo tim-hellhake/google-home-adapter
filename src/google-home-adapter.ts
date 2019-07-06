@@ -8,6 +8,10 @@ import { Adapter, Device, } from 'gateway-addon';
 
 import { Scanner } from 'google-home-notify-client';
 
+import googletts from 'google-tts-api';
+
+import { Client, DefaultMediaReceiver } from 'castv2-client';
+
 interface Message {
   name: string,
   message: string,
@@ -65,21 +69,52 @@ class GoogleHomeDevice extends Device {
 
     if (action.name === 'speak') {
       console.log(`Speaking ${action.input.text}`);
-      this.device.language(action.input.language);
-      this.device.notify(action.input.text);
+      this.speak(this.device.ip, action.input.text, action.input.language)
     } else {
       const message = this.messageByName[action.name];
 
       if (message) {
         console.log(`Speaking ${message}`);
-        this.device.language(message.language);
-        this.device.notify(message.message);
+        this.speak(this.device.ip, message.message, message.language)
       } else {
         console.warn(`Unknown action ${action}`);
       }
     }
 
     action.finish();
+  }
+
+  async speak(ip: string, text: string, lang: string) {
+    const url = await googletts(text, lang, 1, 10 * 1000);
+    const client = new Client();
+
+    client.connect(ip, () => {
+      client.launch(DefaultMediaReceiver, (error, player) => {
+        if (error) {
+          console.error(`Could not launch default DefaultMediaReceiver: ${error}`);
+        }
+
+        if (player) {
+          const media = {
+            contentId: url,
+            contentType: 'audio/mp3',
+            streamType: 'BUFFERED'
+          };
+
+          const options = {
+            autoplay: true
+          };
+
+          player.load(media, options, (error) => {
+            if (error) {
+              console.error(`Could not load media: ${error}`);
+            }
+
+            client.close();
+          });
+        }
+      });
+    });
   }
 }
 
