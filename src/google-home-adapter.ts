@@ -21,7 +21,7 @@ interface Message {
 class GoogleHomeDevice extends Device {
   private messageByName: { [name: string]: Message } = {};
 
-  constructor(adapter: any, manifest: any, private device: any) {
+  constructor(adapter: any, private manifest: any, private device: any) {
     super(adapter, `google-home-${device.ip}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
     this.name = `${manifest.display_name} (${device.ip})`;
@@ -67,15 +67,17 @@ class GoogleHomeDevice extends Device {
   async performAction(action: any) {
     action.start();
 
+    const { defaultLanguage } = this.manifest.moziot.config;
+
     if (action.name === 'speak') {
       console.log(`Speaking ${action.input.text}`);
-      this.speak(this.device.ip, action.input.text, action.input.language)
+      this.speak(this.device.ip, action.input.text, action.input.language || defaultLanguage)
     } else {
       const message = this.messageByName[action.name];
 
       if (message) {
         console.log(`Speaking ${message}`);
-        this.speak(this.device.ip, message.message, message.language)
+        this.speak(this.device.ip, message.message, message.language || defaultLanguage)
       } else {
         console.warn(`Unknown action ${action}`);
       }

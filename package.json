@@ -34,7 +34,14 @@
     "exec": "{nodeLoader} {path}",
     "schema": {
       "type": "object",
+      "required": [
+        "defaultLanguage"
+      ],
       "properties": {
+        "defaultLanguage": {
+          "type": "string",
+          "title": "The fallback language if no language is specified"
+        },
         "messages": {
           "type": "array",
           "title": "Predefined messages",
@@ -43,8 +50,7 @@
             "title": "A predefined message",
             "required": [
               "name",
-              "message",
-              "language"
+              "message"
             ],
             "properties": {
               "name": {
