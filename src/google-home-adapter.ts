@@ -110,7 +110,19 @@ class GoogleHomeDevice extends Device {
               console.error(`Could not load media: ${error}`);
             }
 
-            client.close();
+            player.on('status', (status) => {
+              if (status.idleReason === 'FINISHED') {
+                console.log('Closing player');
+
+                client.stop(player, (error, apps) => {
+                  if (error) {
+                    console.error(`Could not stop DefaultMediaReceiver: ${error}`);
+                  }
+                });
+
+                client.close();
+              }
+            })
           });
         }
       });

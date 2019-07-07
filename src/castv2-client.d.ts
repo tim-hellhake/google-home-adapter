@@ -6,14 +6,21 @@
 
 interface Type<T> extends Function { new(...args: any[]): T; }
 
+interface PlayerStatus {
+    playerState: string,
+    idleReason: string
+}
+
 declare module 'castv2-client' {
     class Client {
         public connect(options: {}, callback: () => void): void;
         public launch<T>(application: Type<T>, callback: (error?: any, application?: T) => void): void;
         public close(): void;
+        public stop(application: {}, callback: (error?: any, applications?: []) => void): void;
     }
 
     class DefaultMediaReceiver {
         public load(media: {}, options: {}, callback: (error?: any, status?: any) => void): void;
+        public on(type: 'status', listener: (status: PlayerStatus) => void): void;
     }
 }
