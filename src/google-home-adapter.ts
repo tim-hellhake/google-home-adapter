@@ -91,7 +91,7 @@ class GoogleHomeDevice extends Device {
     client.connect(ip, () => {
       client.launch(DefaultMediaReceiver, (error, player) => {
         if (error) {
-          console.error(`Could not launch default DefaultMediaReceiver: ${error}`);
+          console.error(`Could not launch DefaultMediaReceiver: ${error}`);
         }
 
         if (player) {
