@@ -32,6 +32,9 @@
     },
     "plugin": true,
     "exec": "{nodeLoader} {path}",
+    "config": {
+      "defaultLanguage": "en"
+    },
     "schema": {
       "type": "object",
       "required": [
