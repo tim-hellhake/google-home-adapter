@@ -91,6 +91,17 @@ class GoogleHomeDevice extends Device {
     const client = new Client();
 
     client.connect(ip, () => {
+      let originalLevel: number;
+
+      client.getVolume((error, level) => {
+        if (error) {
+          console.error(`Could not get volume: ${error}`);
+        } else {
+          originalLevel = level.level;
+          console.log(originalLevel);
+        }
+      });
+
       client.setVolume({ level: 1 }, (error) => {
         if (error) {
           console.error(`Could not increase volume: ${error}`);
@@ -128,7 +139,17 @@ class GoogleHomeDevice extends Device {
                   }
                 });
 
-                client.close();
+                if (originalLevel) {
+                  console.log('Reset original volume');
+
+                  client.setVolume({ level: originalLevel }, (error) => {
+                    if (error) {
+                      console.error(`Could not reset original volume: ${error}`);
+                    }
+
+                    client.close();
+                  });
+                }
               }
             })
           });

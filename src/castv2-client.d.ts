@@ -22,6 +22,7 @@ declare module 'castv2-client' {
         public close(): void;
         public stop(application: {}, callback: (error?: any, applications?: []) => void): void;
         public setVolume(options: Level, callback: (error: any, level: Level) => void): void;
+        public getVolume(callback: (error: any, level: Level) => void): void;
     }
 
     class DefaultMediaReceiver {
