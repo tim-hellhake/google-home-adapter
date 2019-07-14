@@ -11,12 +11,17 @@ interface PlayerStatus {
     idleReason: string
 }
 
+interface Level {
+    level: number
+}
+
 declare module 'castv2-client' {
     class Client {
         public connect(options: {}, callback: () => void): void;
         public launch<T>(application: Type<T>, callback: (error?: any, application?: T) => void): void;
         public close(): void;
         public stop(application: {}, callback: (error?: any, applications?: []) => void): void;
+        public setVolume(options: Level, callback: (error: any, level: Level) => void): void;
     }
 
     class DefaultMediaReceiver {

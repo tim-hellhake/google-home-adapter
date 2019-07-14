@@ -91,6 +91,12 @@ class GoogleHomeDevice extends Device {
     const client = new Client();
 
     client.connect(ip, () => {
+      client.setVolume({ level: 1 }, (error) => {
+        if (error) {
+          console.error(`Could not increase volume: ${error}`);
+        }
+      });
+
       client.launch(DefaultMediaReceiver, (error, player) => {
         if (error) {
           console.error(`Could not launch DefaultMediaReceiver: ${error}`);
