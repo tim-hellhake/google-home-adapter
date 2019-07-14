@@ -102,7 +102,7 @@ class GoogleHomeDevice extends Device {
         }
       });
 
-      client.setVolume({ level: 1 }, (error) => {
+      client.setVolume({ level: 0.5 }, (error) => {
         if (error) {
           console.error(`Could not increase volume: ${error}`);
         }
