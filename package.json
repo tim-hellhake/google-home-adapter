@@ -1,7 +1,7 @@
 {
   "name": "google-home-adapter",
   "display_name": "Google Home Text to Speech",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Uses your Google Home device to speak to you",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
