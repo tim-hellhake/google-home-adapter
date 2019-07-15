@@ -15,7 +15,8 @@ import { Client, DefaultMediaReceiver } from 'castv2-client';
 interface Message {
   name: string,
   message: string,
-  language: string
+  language: string,
+  volume: number
 }
 
 class GoogleHomeDevice extends Device {
@@ -36,6 +37,12 @@ class GoogleHomeDevice extends Device {
         },
         language: {
           type: 'string'
+        },
+        volume: {
+          type: 'integer',
+          unit: '%',
+          minimum: 0,
+          maximum: 100
         }
       }
     };
@@ -71,13 +78,13 @@ class GoogleHomeDevice extends Device {
 
     if (action.name === 'speak') {
       console.log(`Speaking ${action.input.text}`);
-      this.speak(this.device.ip, action.input.text, action.input.language || defaultLanguage)
+      this.speak(this.device.ip, action.input.text, action.input.language || defaultLanguage, action.input.volume || 0.5)
     } else {
       const message = this.messageByName[action.name];
 
       if (message) {
         console.log(`Speaking ${message}`);
-        this.speak(this.device.ip, message.message, message.language || defaultLanguage)
+        this.speak(this.device.ip, message.message, message.language || defaultLanguage, message.volume || 0.5)
       } else {
         console.warn(`Unknown action ${action}`);
       }
@@ -86,7 +93,7 @@ class GoogleHomeDevice extends Device {
     action.finish();
   }
 
-  async speak(ip: string, text: string, lang: string) {
+  async speak(ip: string, text: string, lang: string, volume: number) {
     const url = await googletts(text, lang, 1, 10 * 1000);
     const client = new Client();
 
@@ -102,7 +109,7 @@ class GoogleHomeDevice extends Device {
         }
       });
 
-      client.setVolume({ level: 0.5 }, (error) => {
+      client.setVolume({ level: volume % 100 }, (error) => {
         if (error) {
           console.error(`Could not increase volume: ${error}`);
         }

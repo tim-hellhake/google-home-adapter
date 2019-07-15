@@ -53,7 +53,8 @@
             "title": "A predefined message",
             "required": [
               "name",
-              "message"
+              "message",
+              "volume"
             ],
             "properties": {
               "name": {
@@ -67,6 +68,13 @@
               "language": {
                 "type": "string",
                 "title": "The language of the message (possible values: https://cloud.google.com/speech-to-text/docs/languages)"
+              },
+              "volume": {
+                "type": "integer",
+                "title": "The volume of the message",
+                "unit": "%",
+                "minimum": 0,
+                "maximum": 100
               }
             }
           }
