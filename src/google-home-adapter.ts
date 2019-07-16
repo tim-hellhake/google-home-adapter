@@ -93,7 +93,7 @@ class GoogleHomeDevice extends Device {
       const message = this.messageByName[action.name];
 
       if (message) {
-        console.log(`Speaking ${message}`);
+        console.log(`Speaking ${message.message}`);
         this.speak(this.device.ip, message.message, message.language || defaultLanguage, message.volume || 0.5)
       } else {
         console.warn(`Unknown action ${action}`);
