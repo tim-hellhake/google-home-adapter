@@ -33,6 +33,7 @@
     "plugin": true,
     "exec": "{nodeLoader} {path}",
     "config": {
+      "debug": false,
       "defaultLanguage": "en"
     },
     "schema": {
@@ -41,6 +42,10 @@
         "defaultLanguage"
       ],
       "properties": {
+        "debug": {
+          "type": "boolean",
+          "title": "Enable debug logs"
+        },
         "defaultLanguage": {
           "type": "string",
           "title": "The fallback language if no language is specified"

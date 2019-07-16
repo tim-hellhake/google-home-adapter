@@ -21,12 +21,14 @@ interface Message {
 
 class GoogleHomeDevice extends Device {
   private messageByName: { [name: string]: Message } = {};
+  private readonly debug: boolean;
 
   constructor(adapter: any, private manifest: any, private device: any) {
     super(adapter, `google-home-${device.ip}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
     this.name = `${manifest.display_name} (${device.ip})`;
     this.description = manifest.description;
+    this.debug = manifest.moziot.config.debug;
     const messages: Message[] = manifest.moziot.config.messages;
 
     const speakInput = {
@@ -58,6 +60,12 @@ class GoogleHomeDevice extends Device {
     }
   }
 
+  verbose(s: string) {
+    if (this.debug) {
+      console.log(s);
+    }
+  }
+
   addSpeakAction(name: string, input?: any) {
     const description: any = {
       title: name,
@@ -67,6 +75,8 @@ class GoogleHomeDevice extends Device {
     if (input) {
       description.input = input;
     }
+
+    this.verbose(`Adding action ${JSON.stringify(description, null, 2)}`);
 
     this.addAction(name, description);
   }
@@ -97,6 +107,8 @@ class GoogleHomeDevice extends Device {
     const url = await googletts(text, lang, 1, 10 * 1000);
     const client = new Client();
 
+    this.verbose(`Connecting to ${ip}`);
+
     client.connect(ip, () => {
       let originalLevel: number;
 
@@ -105,15 +117,21 @@ class GoogleHomeDevice extends Device {
           console.error(`Could not get volume: ${error}`);
         } else {
           originalLevel = level.level;
-          console.log(originalLevel);
+          this.verbose(`Current volume is ${originalLevel}`);
         }
       });
 
-      client.setVolume({ level: volume % 100 }, (error) => {
+      const level = volume % 100;
+
+      this.verbose(`Set volume to ${level}`);
+
+      client.setVolume({ level }, (error) => {
         if (error) {
           console.error(`Could not increase volume: ${error}`);
         }
       });
+
+      this.verbose(`Launching ${DefaultMediaReceiver.name}`);
 
       client.launch(DefaultMediaReceiver, (error, player) => {
         if (error) {
@@ -131,14 +149,18 @@ class GoogleHomeDevice extends Device {
             autoplay: true
           };
 
+          this.verbose(`Playing ${url}`);
+
           player.load(media, options, (error) => {
             if (error) {
               console.error(`Could not load media: ${error}`);
             }
 
             player.on('status', (status) => {
+              this.verbose(`New player state is ${status.playerState} (idle reason: ${status.idleReason})`);
+
               if (status.idleReason === 'FINISHED') {
-                console.log('Closing player');
+                this.verbose(`Closing player`);
 
                 client.stop(player, (error) => {
                   if (error) {
@@ -147,13 +169,14 @@ class GoogleHomeDevice extends Device {
                 });
 
                 if (originalLevel) {
-                  console.log('Reset original volume');
+                  this.verbose(`Reset volume to ${originalLevel}`);
 
                   client.setVolume({ level: originalLevel }, (error) => {
                     if (error) {
                       console.error(`Could not reset original volume: ${error}`);
                     }
 
+                    this.verbose('Closing client');
                     client.close();
                   });
                 }
