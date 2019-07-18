@@ -121,7 +121,7 @@ class GoogleHomeDevice extends Device {
         }
       });
 
-      const level = volume % 100;
+      const level = volume / 100;
 
       this.verbose(`Set volume to ${level}`);
 
