@@ -10,6 +10,8 @@ Uses your Google Home device to speak to you.
 
 ## Usage
 The addon registers a google-home device with a `speak(text, language, volume)` action.
+If you don't specify a language the default language (en) will be used.
+You can change the default language in the config.
 
 For a list of possible language values see https://cloud.google.com/speech-to-text/docs/languages.
 
