@@ -34,12 +34,14 @@
     "exec": "{nodeLoader} {path}",
     "config": {
       "debug": false,
-      "defaultLanguage": "en"
+      "defaultLanguage": "en",
+      "defaultVolume": "50"
     },
     "schema": {
       "type": "object",
       "required": [
-        "defaultLanguage"
+        "defaultLanguage",
+        "defaultVolume"
       ],
       "properties": {
         "debug": {
@@ -49,6 +51,13 @@
         "defaultLanguage": {
           "type": "string",
           "title": "The fallback language if no language is specified"
+        },
+        "defaultVolume": {
+          "type": "integer",
+          "title": "The fallback volume if no volume is specified",
+          "unit": "%",
+          "minimum": 0,
+          "maximum": 100
         },
         "messages": {
           "type": "array",

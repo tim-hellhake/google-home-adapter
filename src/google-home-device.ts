@@ -101,7 +101,7 @@ export class GoogleHomeDevice extends Device {
         action.finish();
     }
 
-    async speak(ip: string, text: string, lang: string, volume: number) {
+    async speak(ip: string, text: string, lang: string, volume?: number) {
         const url = await googletts(text, lang, 1, 10 * 1000);
         const client = new Client();
 
@@ -119,7 +119,9 @@ export class GoogleHomeDevice extends Device {
                 }
             });
 
-            const level = volume / 100;
+            const { defaultVolume } = this.manifest.moziot.config;
+
+            const level = (volume || defaultVolume) / 100;
 
             this.verbose(`Set volume to ${level}`);
 
