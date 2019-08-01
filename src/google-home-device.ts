@@ -82,17 +82,15 @@ export class GoogleHomeDevice extends Device {
     async performAction(action: any) {
         action.start();
 
-        const { defaultLanguage } = this.manifest.moziot.config;
-
         if (action.name === 'speak') {
             console.log(`Speaking ${action.input.text}`);
-            this.speak(this.device.ip, action.input.text, action.input.language || defaultLanguage, action.input.volume || 0.5)
+            this.speak(this.device.ip, action.input.text, action.input.language, action.input.volume || 0.5)
         } else {
             const message = this.messageByName[action.name];
 
             if (message) {
                 console.log(`Speaking ${message.message}`);
-                this.speak(this.device.ip, message.message, message.language || defaultLanguage, message.volume || 0.5)
+                this.speak(this.device.ip, message.message, message.language, message.volume || 0.5)
             } else {
                 console.warn(`Unknown action ${action}`);
             }
@@ -101,8 +99,9 @@ export class GoogleHomeDevice extends Device {
         action.finish();
     }
 
-    async speak(ip: string, text: string, lang: string, volume?: number) {
-        const url = await googletts(text, lang, 1, 10 * 1000);
+    async speak(ip: string, text: string, lang?: string, volume?: number) {
+        const { defaultLanguage } = this.manifest.moziot.config;
+        const url = await googletts(text, lang || defaultLanguage, 1, 10 * 1000);
         const client = new Client();
 
         this.verbose(`Connecting to ${ip}`);
