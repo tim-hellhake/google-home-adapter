@@ -7,7 +7,7 @@
 declare module 'gateway-addon' {
     class Device {
         protected '@context': string;
-        protected name: string;
+        public name: string;
         protected description: string;
 
         constructor(adapter: Adapter, id: string);
@@ -19,5 +19,27 @@ declare module 'gateway-addon' {
         constructor(addonManager: any, id: string, packageName: string);
 
         public handleDeviceAdded(device: Device): void;
+    }
+
+    class Outlet {
+        protected name: string;
+
+        constructor(notifier: Notifier, id: string);
+
+        public notify(title: string, message: string, level: Constants.NotificationLevel): void;
+    }
+
+    class Notifier {
+        constructor(addonManager: any, id: string, packageName: string);
+
+        public handleOutletAdded(outlet: Outlet): void;
+    }
+
+    namespace Constants {
+        enum NotificationLevel {
+            LOW,
+            NORMAL,
+            HIGH,
+        }
     }
 }

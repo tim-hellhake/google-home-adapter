@@ -20,12 +20,14 @@ interface Message {
 export class GoogleHomeDevice extends Device {
     private messageByName: { [name: string]: Message } = {};
     private readonly debug: boolean;
+    public readonly ip: string;
 
     constructor(adapter: any, private manifest: any, private device: any) {
         super(adapter, `google-home-${device.ip}`);
         this['@context'] = 'https://iot.mozilla.org/schemas/';
         this.name = `${manifest.display_name} (${device.ip})`;
         this.description = manifest.description;
+        this.ip = device.ip;
         this.debug = manifest.moziot.config.debug;
         const messages: Message[] = manifest.moziot.config.messages;
 

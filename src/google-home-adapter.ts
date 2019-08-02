@@ -20,6 +20,18 @@ export class GoogleHomeAdapter extends Adapter {
         console.log(`Detected Google Home at ${device.ip}`);
         const googleHomeDevice = new GoogleHomeDevice(this, manifest, device);
         this.handleDeviceAdded(googleHomeDevice);
+
+        try {
+          const { GoogleHomeNotifier } = require('./google-home-notifier');
+          new GoogleHomeNotifier(addonManager, manifest.name, googleHomeDevice);
+        } catch (e) {
+          console.error(e);
+          if (!(e instanceof TypeError)) {
+            console.error(e);
+          } else {
+            console.warn('Notifier api not supported by this version of the gateway');
+          }
+        }
       }
     });
   }
