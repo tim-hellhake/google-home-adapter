@@ -23,7 +23,9 @@
     "LICENSE",
     "SHA256SUMS",
     "lib/index.js",
-    "lib/google-home-adapter.js"
+    "lib/google-home-adapter.js",
+    "lib/google-home-device.js",
+    "lib/google-home-notifier.js"
   ],
   "moziot": {
     "api": {
