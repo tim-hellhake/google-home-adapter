@@ -103,6 +103,6 @@
   },
   "devDependencies": {
     "typescript": "^3.5.3",
-    "@types/node": "^12.7.1"
+    "@types/node": "^12.7.2"
   }
 }
