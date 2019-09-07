@@ -20,14 +20,12 @@ interface Message {
 export class GoogleHomeDevice extends Device {
     private messageByName: { [name: string]: Message } = {};
     private readonly debug: boolean;
-    public readonly ip: string;
 
-    constructor(adapter: any, private manifest: any, private device: any) {
-        super(adapter, `google-home-${device.ip}`);
+    constructor(adapter: any, private manifest: any, name: string, private ip: string) {
+        super(adapter, name);
         this['@context'] = 'https://iot.mozilla.org/schemas/';
-        this.name = `${manifest.display_name} (${device.ip})`;
+        this.name = name;
         this.description = manifest.description;
-        this.ip = device.ip;
         this.debug = manifest.moziot.config.debug;
         const messages: Message[] = manifest.moziot.config.messages;
 
@@ -105,11 +103,10 @@ export class GoogleHomeDevice extends Device {
         const { defaultLanguage } = this.manifest.moziot.config;
         const url = await googletts(text, lang || defaultLanguage, 1, 10 * 1000);
         const client = new Client();
-        const ip = this.device.ip;
 
-        this.verbose(`Connecting to ${ip}`);
+        this.verbose(`Connecting to ${this.ip}`);
 
-        client.connect(ip, () => {
+        client.connect(this.ip, () => {
             let originalLevel: number;
 
             client.getVolume((error, level) => {

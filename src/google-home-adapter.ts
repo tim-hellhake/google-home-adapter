@@ -16,9 +16,12 @@ export class GoogleHomeAdapter extends Adapter {
     addonManager.addAdapter(this);
 
     Scanner.scan((device: any) => {
-      if (device.name && device.name.indexOf('_googlecast._tcp.local') > -1) {
-        console.log(`Detected Google Home at ${device.ip}`);
-        const googleHomeDevice = new GoogleHomeDevice(this, manifest, device);
+      const prefix = '._googlecast._tcp.local';
+
+      if (device.name && device.name.indexOf(prefix) > -1) {
+        const name = device.name.replace(prefix, '');
+        console.log(`Detected ${name} at ${device.ip}`);
+        const googleHomeDevice = new GoogleHomeDevice(this, manifest, name, device.ip);
         this.handleDeviceAdded(googleHomeDevice);
 
         try {

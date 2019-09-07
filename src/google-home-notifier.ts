@@ -12,7 +12,7 @@ import { GoogleHomeDevice } from './google-home-device';
 
 class GoogleHomeOutlet extends Outlet {
     constructor(notifier: Notifier, private device: GoogleHomeDevice) {
-        super(notifier, `google-home-outlet-${device.ip}`);
+        super(notifier, device.id);
         this.name = device.name;
     }
 
@@ -23,7 +23,7 @@ class GoogleHomeOutlet extends Outlet {
 
 export class GoogleHomeNotifier extends Notifier {
     constructor(addonManager: any, packageName: string, device: GoogleHomeDevice) {
-        super(addonManager, `google-home-notifier-${device.ip}`, packageName);
+        super(addonManager, device.id, packageName);
 
         addonManager.addNotifier(this);
 
