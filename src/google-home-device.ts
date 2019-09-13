@@ -118,15 +118,11 @@ export class GoogleHomeDevice extends Device {
                 }
             });
 
-            const { defaultVolume } = this.manifest.moziot.config;
+            this.verbose(`Muting cast-start chime`);
 
-            const level = (volume || defaultVolume) / 100;
-
-            this.verbose(`Set volume to ${level}`);
-
-            client.setVolume({ level }, (error) => {
+            client.setVolume({ level: 0 }, (error) => {
                 if (error) {
-                    console.error(`Could not increase volume: ${error}`);
+                    console.error(`Could not mute: ${error}`);
                 }
             });
 
@@ -136,6 +132,18 @@ export class GoogleHomeDevice extends Device {
                 if (error) {
                     console.error(`Could not launch DefaultMediaReceiver: ${error}`);
                 }
+
+                const { defaultVolume } = this.manifest.moziot.config;
+
+                const level = (volume || defaultVolume) / 100;
+
+                this.verbose(`Set volume to ${level}`);
+
+                client.setVolume({ level }, (error) => {
+                    if (error) {
+                        console.error(`Could not increase volume: ${error}`);
+                    }
+                });
 
                 if (player) {
                     const media = {
