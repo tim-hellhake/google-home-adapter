@@ -102,7 +102,7 @@
     "google-home-notify-client": "^0.3.1"
   },
   "devDependencies": {
-    "typescript": "^3.5.3",
-    "@types/node": "^12.7.2"
+    "typescript": "^3.7.3",
+    "@types/node": "^12.12.17"
   }
 }
