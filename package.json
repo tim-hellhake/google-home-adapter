@@ -100,7 +100,8 @@
     }
   },
   "dependencies": {
-    "google-home-notify-client": "^0.3.1"
+    "google-home-notify-client": "^0.3.1",
+    "google-translate-tts": "^0.1.0"
   },
   "devDependencies": {
     "typescript": "^3.7.3",

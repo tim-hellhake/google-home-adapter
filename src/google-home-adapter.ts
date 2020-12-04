@@ -10,10 +10,14 @@ import { Scanner } from 'google-home-notify-client';
 
 import { GoogleHomeDevice } from './google-home-device';
 
+import { InMemoryServer } from './in-memory-server';
+
 export class GoogleHomeAdapter extends Adapter {
   constructor(addonManager: any, manifest: any) {
     super(addonManager, GoogleHomeAdapter.name, manifest.name);
     addonManager.addAdapter(this);
+
+    const server = new InMemoryServer();
 
     Scanner.scan((device: any) => {
       const prefix = '._googlecast._tcp.local';
@@ -21,7 +25,7 @@ export class GoogleHomeAdapter extends Adapter {
       if (device.name && device.name.indexOf(prefix) > -1) {
         const name = device.name.replace(prefix, '');
         console.log(`Detected ${name} at ${device.ip}`);
-        const googleHomeDevice = new GoogleHomeDevice(this, manifest, name, device.ip);
+        const googleHomeDevice = new GoogleHomeDevice(this, manifest, name, device.ip, server);
         this.handleDeviceAdded(googleHomeDevice);
 
         try {

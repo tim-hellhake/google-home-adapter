@@ -5,10 +5,9 @@
  */
 
 import { Device } from 'gateway-addon';
-
-import googletts from 'google-tts-api';
-
 import { Client, DefaultMediaReceiver } from 'castv2-client';
+import { synthesize } from 'google-translate-tts';
+import { InMemoryServer } from './in-memory-server';
 
 interface Message {
     name: string,
@@ -21,7 +20,7 @@ export class GoogleHomeDevice extends Device {
     private messageByName: { [name: string]: Message } = {};
     private readonly debug: boolean;
 
-    constructor(adapter: any, private manifest: any, name: string, private ip: string) {
+    constructor(adapter: any, private manifest: any, name: string, private ip: string, private server: InMemoryServer) {
         super(adapter, name);
         this['@context'] = 'https://iot.mozilla.org/schemas/';
         this.name = name;
@@ -101,7 +100,13 @@ export class GoogleHomeDevice extends Device {
 
     async speak(text: string, lang?: string, volume?: number) {
         const { defaultLanguage } = this.manifest.moziot.config;
-        const url = await googletts(text, lang || defaultLanguage, 1, 10 * 1000);
+        this.verbose(`Fetching audio data for ${text} in ${lang}`);
+        const voice = lang || defaultLanguage;
+        const buffer = await synthesize({ text, voice });
+        this.verbose(`Received ${buffer.length} bytes of audio data`);
+        const url = this.server.generateUrl(buffer);
+        this.verbose(`Audio is available at ${url}`);
+
         const client = new Client();
 
         this.verbose(`Connecting to ${this.ip}`);
