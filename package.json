@@ -26,7 +26,8 @@
     "lib/index.js",
     "lib/google-home-adapter.js",
     "lib/google-home-device.js",
-    "lib/google-home-notifier.js"
+    "lib/google-home-notifier.js",
+    "lib/in-memory-server.js"
   ],
   "moziot": {
     "api": {
