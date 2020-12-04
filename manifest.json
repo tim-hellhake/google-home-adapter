@@ -3,7 +3,7 @@
   "id": "google-home-adapter",
   "name": "Google Home Text to Speech",
   "short_name": "Google Home",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Uses your Google Home device to speak to you",
   "homepage_url": "https://github.com/tim-hellhake/google-home-adapter#readme",
   "license": "MPL-2.0",
