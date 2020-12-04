@@ -140,7 +140,7 @@ export class GoogleHomeDevice extends Device {
 
                 const { defaultVolume } = this.manifest.moziot.config;
 
-                const level = (volume || defaultVolume) / 100;
+                const level = (volume && volume >= 1 ? volume : defaultVolume) / 100;
 
                 this.verbose(`Set volume to ${level}`);
 
