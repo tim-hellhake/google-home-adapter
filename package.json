@@ -100,11 +100,11 @@
     }
   },
   "dependencies": {
-    "google-home-notify-client": "^0.3.1",
+    "google-home-notify-client": "^0.3.2",
     "google-translate-tts": "^0.1.0"
   },
   "devDependencies": {
-    "typescript": "^3.7.3",
-    "@types/node": "^12.12.17"
+    "typescript": "^4.1.2",
+    "@types/node": "^14.14.10"
   }
 }

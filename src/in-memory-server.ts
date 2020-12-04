@@ -14,16 +14,7 @@ export class InMemoryServer {
     private ip: string;
 
     constructor(private port: number = 54321) {
-        const networkInterfaces = os.networkInterfaces();
-        const [nic] = Object.values(networkInterfaces)
-            .reduce((a, b) => a.concat(b))
-            .filter(nic => !nic.internal && nic.address);
-
-        if (!nic) {
-            throw new Error('No local ip address detected');
-        }
-
-        this.ip = nic.address;
+        this.ip = this.getIpAddress();
 
         http.createServer((req, res) => {
             const { pathname } = url.parse(req.url ?? '');
@@ -51,6 +42,24 @@ export class InMemoryServer {
         }).listen(port);
 
         console.log(`Listening on http://${this.ip}:${this.port}`);
+    }
+
+    private getIpAddress(): string {
+        const networkInterfaces = os.networkInterfaces();
+
+        for (const nic of Object.values(networkInterfaces)) {
+            if (nic) {
+                for (const nicIf of nic) {
+                    if (nicIf) {
+                        if (!nicIf.internal && nicIf.address) {
+                            return nicIf.address;
+                        }
+                    }
+                }
+            }
+        }
+
+        throw new Error('No local ip address detected');
     }
 
     public generateUrl(buffer: Buffer): string {
